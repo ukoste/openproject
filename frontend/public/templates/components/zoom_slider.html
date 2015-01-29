@@ -1,0 +1,5 @@
+<label for="{{ ::sliderId }}" class="hidden-for-sighted"
+  ng-bind="::I18n.t('js.timelines.zoom.slider')"></label>
+<input type="range" id="{{ ::sliderId }}"
+  min="{{ ::minValue }}" max="{{ ::maxValue }}"
+  value="{{ currentScaleIndex + 1 }}">
