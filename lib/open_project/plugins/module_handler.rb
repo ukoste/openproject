@@ -33,28 +33,18 @@ module OpenProject::Plugins
 
     class << self
       def disable_modules(module_names)
-        @@disabled_modules << module_names
-        @@disabled_modules.flatten
+        @@disabled_modules += Array(module_names).map(&:to_sym)
       end
 
       def disable(disabled_modules)
-        project_modules =  Redmine::AccessControl.available_project_modules
-
         return if disabled_modules.empty?
 
-        disabled_modules.map do |module_name|
-          if project_modules.include? (module_name.to_sym)
-            permissions = Redmine::AccessControl.permissions - Redmine::AccessControl.modules_permissions(module_name)
-            Redmine::AccessControl.map do |mapper|
-              permissions.map do |permission|
-                options = { project_module: permission.project_module,
-                            public: permission.public?,
-                            require: permission.require_loggedin? }
+        project_modules =  Redmine::AccessControl.available_project_modules
 
-                mapper.permission(permission.name, permission.actions, options)
-              end
-            end
-          end
+        to_disable = disabled_modules & disabled_modules
+
+        to_disable.map do |module_name|
+          Redmine::AccessControl.remove_modules_permissions(module_name)
         end
       end
     end
