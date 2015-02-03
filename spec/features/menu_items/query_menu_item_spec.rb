@@ -33,7 +33,7 @@ feature 'Query menu items' do
   let(:project) { FactoryGirl.create :project }
 
   before do
-    User.stub(:current).and_return user
+    allow(User).to receive(:current).and_return user
   end
 
   context 'with identical names' do

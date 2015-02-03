@@ -35,16 +35,16 @@ describe ::API::V3::Categories::CategoryRepresenter do
   context 'generation' do
     subject(:generated) { representer.to_json }
 
-    it { should include_json('Category'.to_json).at_path('_type') }
+    it { is_expected.to include_json('Category'.to_json).at_path('_type') }
 
-    xit { should have_json_type(Object).at_path('_links') }
+    xit { is_expected.to have_json_type(Object).at_path('_links') }
     xit 'should link to self' do
       expect(subject).to have_json_path('_links/self/href')
     end
 
     describe 'category' do
-      it { should have_json_path('id') }
-      it { should have_json_path('name') }
+      it { is_expected.to have_json_path('id') }
+      it { is_expected.to have_json_path('name') }
     end
   end
 end
