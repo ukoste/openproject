@@ -58,6 +58,9 @@ Capybara.configure do |config|
   config.ignore_hidden_elements = true
   config.match = :one
   config.visible_text_only = true
+  # Set App host to not contain subdomain for multitenancy.
+  # Multitenancy would try to choose another schema when it finds a subdomain.
+  config.app_host = "http://example.org"
 end
 
 # By default, any exception happening in your Rails application will bubble up
@@ -105,9 +108,22 @@ end
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
+# Part of the multitenancy fix
+# Reset app host for selenium cukes, otherwise it tries to connect to example.org.
+# We don't need to prevent setting a subdomain here as cucumber/capybara/selenium have to use
+# 127.0.0.1 here anyway.
+Before('@javascript') do
+  Capybara.app_host = nil
+end
+
+After('@javascript') do
+  Capybara.app_host = 'http://example.org'
+end
+# Multitenancy fix end
+
 # Remove any modal dialog remaining from the scenarios which finish in an unclean state
 Before do |_scenario|
-  page.driver.browser.switch_to.alert.accept rescue Selenium::WebDriver::Error::NoAlertOpenError
+  Subscribem.ensure_tenant('tenant1')
 end
 
 # Capybara.register_driver :selenium do |app|

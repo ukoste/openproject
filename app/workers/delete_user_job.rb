@@ -27,8 +27,13 @@
 # See doc/COPYRIGHT.rdoc for more details.
 #++
 
+require 'multitenancy/delayed_job/hooks'
+
 class DeleteUserJob
+  include Multitenancy::Delayed::Job::Hooks
+
   def initialize(user)
+    super
     @user_id = user.id
   end
 

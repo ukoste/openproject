@@ -38,6 +38,8 @@ describe BoardsController, type: :controller do
 
   before do
     disable_flash_sweep
+
+    allow(User).to receive(:current).and_return user
   end
 
   describe :create do
