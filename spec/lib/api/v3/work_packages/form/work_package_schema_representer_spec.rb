@@ -196,6 +196,44 @@ describe ::API::V3::WorkPackages::Form::WorkPackageSchemaRepresenter do
         end
       end
 
+      describe 'categories' do
+        shared_examples_for 'contains categories' do
+          it_behaves_like 'linked property', 'category', 'Category'
+
+          it 'contains valid links to categories' do
+            category_links = categories.map do |category|
+              { href: "/api/v3/categories/#{category.id}", title: category.name }
+            end
+
+            is_expected.to be_json_eql(category_links.to_json)
+              .at_path('category/_links/allowedValues')
+          end
+
+          it 'embeds categories' do
+            categories.each_with_index do |category, i|
+              is_expected.to be_json_eql(category.id.to_json)
+                .at_path("category/_embedded/allowedValues/#{i}/id")
+            end
+          end
+        end
+
+        context 'w/o allowed categories' do
+          before { allow(work_package).to receive(:assignable_categories).and_return([]) }
+
+          it_behaves_like 'contains categories' do
+            let(:categories) { [] }
+          end
+        end
+
+        context 'with allowed categories' do
+          let(:categories) { FactoryGirl.build_stubbed_list(:category, 3) }
+
+          before { allow(work_package).to receive(:assignable_categories).and_return(categories) }
+
+          it_behaves_like 'contains categories'
+        end
+      end
+
       describe 'priorities' do
         shared_examples_for 'contains priorities' do
           it_behaves_like 'linked property', 'priority', 'Priority'
