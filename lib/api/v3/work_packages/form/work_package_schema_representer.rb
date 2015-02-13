@@ -85,11 +85,11 @@ module API
                    }
 
           property :category,
-                    exec_context: :decorator,
-                    getter: -> (*) {
-                      SchemaAllowedCategoriesRepresenter.new(represented.assignable_categories,
-                                                             current_user: current_user)
-                    }
+                   exec_context: :decorator,
+                   getter: -> (*) {
+                     SchemaAllowedCategoriesRepresenter.new(represented.assignable_categories,
+                                                            current_user: current_user)
+                   }
 
           property :version,
                    exec_context: :decorator,

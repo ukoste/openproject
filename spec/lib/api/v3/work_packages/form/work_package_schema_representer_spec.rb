@@ -137,7 +137,7 @@ describe ::API::V3::WorkPackages::Form::WorkPackageSchemaRepresenter do
             end
 
             is_expected.to be_json_eql(embedded_statuses.to_json)
-                           .at_path('status/_embedded/allowedValues')
+              .at_path('status/_embedded/allowedValues')
           end
         end
 
@@ -244,13 +244,13 @@ describe ::API::V3::WorkPackages::Form::WorkPackageSchemaRepresenter do
             end
 
             is_expected.to be_json_eql(priority_links.to_json)
-                             .at_path('priority/_links/allowedValues')
+              .at_path('priority/_links/allowedValues')
           end
 
           it 'embeds priorities' do
             priorities.each_with_index do |priority, i|
               is_expected.to be_json_eql(priority.id.to_json)
-                               .at_path("priority/_embedded/allowedValues/#{i}/id")
+                .at_path("priority/_embedded/allowedValues/#{i}/id")
             end
           end
         end
