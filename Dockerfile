@@ -84,44 +84,38 @@
 #
 # If you don't want to execute these commands by hand all the time, have a look at the fig.yml
 
-FROM ubuntu:14.04
+FROM centos:7
 MAINTAINER Finn GmbH <info@finn.de>
 
 # update the package list
-RUN apt-get update
+RUN yum update -y
 
-# install build-essential because we need to compile some native extensions
-RUN apt-get install -y build-essential
+# install required tools for building native extensions later on
+RUN yum install -y gcc-c++ make tar patch
 
 # install zlib development headers for nokogiri to build
 #
 # http://www.nokogiri.org/tutorials/installing_nokogiri.html
 #
-RUN apt-get install -y zlib1g-dev
+RUN yum install -y zlib-devel
 
 # we use a database for our backend, so let's add a couple of them
-RUN apt-get -y install libpq-dev libmysql++-dev sqlite3 libsqlite3-dev
+RUN yum install -y postgresql-devel mariadb mariadb-devel sqlite-devel
+
+# add the nodejs repository to the package manager
+#
+# https://github.com/joyent/node/wiki/installing-node.js-via-package-manager#enterprise-linux-and-fedora
+#
+RUN curl -sL https://rpm.nodesource.com/setup | bash -
 
 # newer versions of openproject use angular-js, so we want node and npm
-RUN apt-get -y install nodejs npm
-
-# allow the nodejs binary to be called via node (this should be fixed somehow)
-RUN ln -s nodejs /usr/bin/node
+RUN yum install -y nodejs
 
 # install git in order to checkout gems defined by git urls
-RUN apt-get -y install git-core
-
-# install ruby 2.1
-#
-# the following installs ruby 2.1 via the apt package manager. unfortunately,
-# the default packages still only contain ruby 1.9, so we use brightbox's one.
-#
-RUN apt-get install -y software-properties-common python-software-properties
-RUN apt-add-repository -y ppa:brightbox/ruby-ng
-RUN apt-get update
+RUN yum install -y git
 
 # install ruby 2.1 with development extensions
-RUN apt-get install -y ruby2.1 ruby2.1-dev
+RUN yum install -y ruby ruby-devel
 
 # install our beloved bundler
 RUN gem install bundler
