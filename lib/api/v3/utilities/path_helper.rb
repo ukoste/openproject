@@ -94,7 +94,7 @@ module API
             "#{root}/relations/#{id}"
           end
 
-          def self.schema(project_id, type_id)
+          def self.work_package_schema(project_id, type_id)
             "#{root}/work_packages/schemas/#{project_id}-#{type_id}"
           end
 

@@ -47,7 +47,7 @@ module API
 
         link :schema do
           {
-            href: api_v3_paths.schema(represented.project.id, represented.type.id)
+            href: api_v3_paths.work_package_schema(represented.project.id, represented.type.id)
           }
         end
 
