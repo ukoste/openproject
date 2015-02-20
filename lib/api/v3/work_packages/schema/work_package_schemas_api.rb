@@ -65,8 +65,8 @@ module API
                 end
 
                 schema = WorkPackageSchema.new(project: project, type: type)
-                @representer = WorkPackageSchemaRepresenter.new(schema,
-                                                                current_user: current_user)
+                @representer = WorkPackageSchemaRepresenter.create(schema,
+                                                                   current_user: current_user)
               end
 
               get do
